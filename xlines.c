@@ -11,6 +11,8 @@
 
 
 int text_color = 1;
+int drawpoint = 2;
+int line_x = 0; int line_y = 0; 
 
 /* here are our X variables */
 Display *dis;
@@ -118,6 +120,17 @@ int main ()
 	                     XClearWindow(dis, win);
                        }
 
+                       else if (text[0]=='p') {  
+                          XDrawPoint(dis, win, gc, 5, 5);
+                          if      ( drawpoint == 0 ) drawpoint = 1 ;
+                          else if ( drawpoint == 1 ) drawpoint = 2 ; 
+                          else if ( drawpoint >= 2 ) drawpoint = 0 ; 
+                          else drawpoint = 2;
+                          //XDrawPoint(dis, win, gc, 5, height-5);
+                          //XDrawPoint(dis, win, gc, width-5, 5);
+                          //XDrawPoint(dis, win, gc, width-5, height-5);
+                       }
+
                        else if (text[0]=='o') { mvlinew( 50,50, 100,100 );   } 
                        else if (text[0]=='x') {      
                            XSetForeground(dis, gc, 240 );
@@ -178,12 +191,19 @@ int main ()
                 {
 		        /* tell where the mouse Button was Pressed */
 			int x=event.xbutton.x, y=event.xbutton.y;
-
-			strcpy(text,"Mouse !");
-			//XSetForeground(dis,gc,rand()%event.xbutton.x%255); 
                         XSetForeground(dis, gc, 0 );
-			XDrawString(dis,win,gc,x,y, text, strlen(text));
+                        if ( drawpoint == 1 )
+                        {
+			    //XSetForeground(dis,gc,rand()%event.xbutton.x%255); 
+		   	    strcpy(text,"Mouse !");
+			    XDrawString(dis,win,gc,x,y, text, strlen(text));
+                        }
+                        else if ( drawpoint == 2 )
+                        {
+                             mvlinew( 0, 0, event.xbutton.x , event.xbutton.y );
+                        }
                         printf( " the mouse position Y=%d X=%d \n",  event.xbutton.y, y=event.xbutton.x  );
+                        XDrawPoint(dis, win, gc, event.xbutton.x , event.xbutton.y );
 		}
 	}
 
